@@ -1,0 +1,30 @@
+{
+  "name": "universe-certificados",
+  "version": "0.0.8.7",
+  "description": "Gerador de Certificados — Centro Educacional Universe",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:linux": "electron-builder --linux",
+    "build:win":   "electron-builder --win",
+    "build:all":   "electron-builder --linux --win"
+  },
+  "build": {
+    "appId": "br.com.universe.certificados",
+    "productName": "Gerador de Certificados Universe",
+    "directories": { "output": "dist" },
+    "files": ["main.js", "src/**/*", "assets/**/*"],
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Office",
+      "icon": "assets/images/icon.png"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "assets/images/icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron-builder": "^24.0.0"
+  }
+}
