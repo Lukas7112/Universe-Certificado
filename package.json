@@ -1,6 +1,6 @@
 {
   "name": "universe-certificados",
-  "version": "0.0.8.7",
+  "version": "0.8.7",
   "description": "Gerador de Certificados — Centro Educacional Universe",
   "main": "main.js",
   "scripts": {
