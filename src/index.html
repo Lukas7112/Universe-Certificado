@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Certificados — Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0d1b3e;--gold:#c9a84c;--cream:#f5f0e8}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Lato',sans-serif}
+#titlebar{position:fixed;top:0;left:0;right:0;height:34px;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:flex-end;padding:0 10px;gap:8px;-webkit-app-region:drag;z-index:9999;border-bottom:1px solid rgba(201,168,76,0.15)}
+.tb-btn{-webkit-app-region:no-drag;width:26px;height:20px;border-radius:4px;border:none;background:rgba(255,255,255,0.08);color:#ccc;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.tb-btn:hover{background:rgba(255,255,255,0.18)}.tb-btn.close:hover{background:#c0392b;color:#fff}
+.screen{position:fixed;inset:0;top:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
+.screen.active{opacity:1;pointer-events:all}
+#screen-intro{background:#000}
+#screen-version{background:#000}
+#screen-app{background:#0a0f1e;overflow-y:auto;padding:32px 20px 60px}
+.intro-logo{width:180px;height:180px;object-fit:contain;margin-bottom:32px;filter:drop-shadow(0 0 40px rgba(201,168,76,0.5));opacity:0;transform:scale(0.85);transition:opacity 0.9s ease,transform 0.9s ease}
+.intro-logo.show{opacity:1;transform:scale(1)}
+.intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:20px 0;transition:width 1s ease 0.2s}
+.intro-line.show{width:260px}
+.intro-made{font-family:'Cinzel',serif;font-size:clamp(1.1rem,3vw,1.6rem);letter-spacing:0.22em;color:#fff;text-transform:uppercase;opacity:0;transform:translateY(12px);transition:opacity 0.7s ease 0.3s,transform 0.7s ease 0.3s}
+.intro-made.show{opacity:1;transform:translateY(0)}
+.intro-sub{margin-top:10px;font-size:0.78rem;letter-spacing:0.18em;color:rgba(201,168,76,0.75);text-transform:uppercase;opacity:0;transition:opacity 0.7s ease 0.55s}
+.intro-sub.show{opacity:1}
+.version-badge{font-family:'Cinzel',serif;font-size:clamp(2rem,8vw,5rem);font-weight:900;color:#c9a84c;letter-spacing:0.08em;opacity:0;transform:scale(1.15);transition:opacity 0.6s ease,transform 0.8s ease}
+.version-badge.show{opacity:1;transform:scale(1)}
+.version-label{margin-top:12px;font-size:0.75rem;letter-spacing:0.3em;color:rgba(255,255,255,0.35);text-transform:uppercase;opacity:0;transition:opacity 0.6s ease 0.3s}
+.version-label.show{opacity:1}
+.version-bar{margin-top:32px;width:0;height:2px;background:#c9a84c;border-radius:2px;transition:width 2.2s cubic-bezier(0.4,0,0.2,1) 0.2s}
+.version-bar.show{width:320px}
+.app-header{text-align:center;margin-bottom:40px}
+.app-header h1{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:900;letter-spacing:0.12em;color:#c9a84c;text-transform:uppercase}
+.app-header p{margin-top:6px;font-size:0.82rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase}
+.gold-line{width:70px;height:2px;background:#c9a84c;margin:14px auto 0}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.22);border-radius:16px;padding:36px 40px;width:100%;max-width:560px;backdrop-filter:blur(8px)}
+.field{margin-bottom:22px}
+.field label{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#c9a84c;margin-bottom:7px}
+.field input,.field select{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:8px;padding:12px 15px;color:#fff;font-family:'Lato',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s;appearance:none}
+.field select option{background:#1a2040;color:#fff}
+.field input:focus,.field select:focus{border-color:#c9a84c;background:rgba(201,168,76,0.06)}
+.field input::placeholder{color:rgba(255,255,255,0.22)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{width:100%;margin-top:6px;padding:15px;background:linear-gradient(135deg,#c9a84c,#e8c96a,#b8922a);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0d1b3e;cursor:pointer;transition:opacity 0.2s,transform 0.15s}
+.btn:hover{opacity:0.9;transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.status{margin-top:18px;text-align:center;font-size:0.83rem;color:rgba(255,255,255,0.45);min-height:20px;letter-spacing:0.05em}
+.status.ok{color:#7ecba1}.status.err{color:#f08080}
+.preview-wrap{margin-top:44px;width:100%;max-width:860px}
+.preview-label{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,168,76,0.55);margin-bottom:14px;text-align:center}
+canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);display:block;margin-bottom:22px}
+</style>
+</head>
+<body>
+<div id="titlebar">
+  <span style="flex:1;padding-left:12px;font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;-webkit-app-region:drag;">UNIVERSE CERTIFICADOS &nbsp;·&nbsp; v0.0.8.7 β</span>
+  <button class="tb-btn" onclick="window.electronAPI?.minimize()">─</button>
+  <button class="tb-btn" onclick="window.electronAPI?.maximize()">□</button>
+  <button class="tb-btn close" onclick="window.electronAPI?.close()">✕</button>
+</div>
+
+<div id="screen-intro" class="screen active">
+  <img id="intro-logo-img" class="intro-logo" src="../assets/images/logo.png" onerror="this.style.display='none'">
+  <div class="intro-line" id="intro-line"></div>
+  <div class="intro-made" id="intro-made">Feito por Lucks</div>
+  <div class="intro-sub"  id="intro-sub">Built with ❤ for Centro Educacional Universe</div>
+</div>
+
+<div id="screen-version" class="screen">
+  <div class="version-badge" id="ver-badge">0.0.8.7</div>
+  <div class="version-label" id="ver-label">BETA &nbsp;·&nbsp; GERADOR DE CERTIFICADOS</div>
+  <div class="version-bar"   id="ver-bar"></div>
+</div>
+
+<div id="screen-app" class="screen">
+  <div class="app-header">
+    <h1>Gerador de Certificados</h1>
+    <p>Centro Educacional Universe</p>
+    <div class="gold-line"></div>
+  </div>
+  <div class="card">
+    <div class="field"><label>Nome do Aluno(a)</label><input type="text" id="nome" placeholder="Ex: MARIA SILVA SOUZA" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="field"><label>CPF</label><input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
+    <div class="field"><label>Curso</label>
+      <select id="curso">
+        <option value="">Selecione o curso...</option>
+        <option value="profissionalizante">Informática Profissionalizante</option>
+        <option value="basica">Informática Básica</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="field"><label>Início</label><input type="date" id="inicio"></div>
+      <div class="field"><label>Término</label><input type="date" id="termino"></div>
+    </div>
+    <button class="btn" onclick="gerar()" id="btnGerar">Gerar Certificado PDF</button>
+    <div class="status" id="status"></div>
+  </div>
+  <div class="preview-wrap" id="previewWrap" style="display:none">
+    <div class="preview-label">Pré-visualização — Frente</div>
+    <canvas id="canvasFront"></canvas>
+    <div class="preview-label">Pré-visualização — Verso</div>
+    <canvas id="canvasBack"></canvas>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const screens={intro:document.getElementById('screen-intro'),version:document.getElementById('screen-version'),app:document.getElementById('screen-app')};
+function showScreen(n){Object.values(screens).forEach(s=>s.classList.remove('active'));screens[n].classList.add('active')}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+let introAudioBuffer=null;
+async function loadIntroSound(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const res=await fetch('../assets/sounds/intro.wav');
+    const buf=await res.arrayBuffer();
+    introAudioBuffer={ctx:ac,buffer:await ac.decodeAudioData(buf)};
+  }catch(e){introAudioBuffer=null}
+}
+function playIntroSound(){
+  try{if(introAudioBuffer){const s=introAudioBuffer.ctx.createBufferSource();s.buffer=introAudioBuffer.buffer;s.connect(introAudioBuffer.ctx.destination);s.start(0)}}
+  catch(e){}
+}
+
+async function runIntro(){
+  showScreen('intro');
+  await sleep(300);
+  document.getElementById('intro-logo-img').classList.add('show');
+  playIntroSound();
+  await sleep(600);
+  document.getElementById('intro-line').classList.add('show');
+  await sleep(400);
+  document.getElementById('intro-made').classList.add('show');
+  await sleep(300);
+  document.getElementById('intro-sub').classList.add('show');
+  await sleep(2200);
+  screens.intro.style.transition='opacity 0.7s ease';
+  screens.intro.style.opacity='0';
+  await sleep(700);
+  showScreen('version');
+  await sleep(100);
+  document.getElementById('ver-badge').classList.add('show');
+  document.getElementById('ver-label').classList.add('show');
+  await sleep(200);
+  document.getElementById('ver-bar').classList.add('show');
+  await sleep(2800);
+  screens.version.style.transition='opacity 0.6s ease';
+  screens.version.style.opacity='0';
+  await sleep(600);
+  showScreen('app');
+}
+
+window.addEventListener('load',async()=>{await loadIntroSound();runIntro()});
+
+const CURSOS={
+  profissionalizante:{nome:"INFORMÁTICA PROFISSIONALIZANTE",carga:"458",disciplinas:[
+    ["Access 2016","20h"],["CorelDRAW 2018","20h"],["Digitação","10h"],["Dreamweaver CC","20h"],
+    ["Excel 2016","20h"],["Excel 2016 - Avançado","20h"],["Excel 2016 - Dashboard","20h"],
+    ["Illustrator CC 2015","20h"],["InDesign CC 2015","20h"],["InDesign CS6","20h"],
+    ["Internet V5","10h"],["Lógica de Programação","20h"],["Marketing Digital para Iniciantes V4","20h"],
+    ["PHP 5 - Básico","20h"],["Photoshop CC 2018","20h"],["PowerPoint 2016","20h"],
+    ["Project 2010","20h"],["Windows 10 - V1809","10h"],["Word 2016","20h"],
+    ["Word 2016 - Avançado - TCC","20h"],["Youtuber","20h"]]},
+  basica:{nome:"INFORMÁTICA BÁSICA",carga:"90",disciplinas:[
+    ["Digitação","10h"],["Excel 2016","20h"],["Internet V5","10h"],
+    ["PowerPoint 2016","20h"],["Windows 10 - V1809","10h"],["Word 2016","20h"]]}
+};
+
+function maskCPF(el){let v=el.value.replace(/\D/g,'');if(v.length>3)v=v.slice(0,3)+'.'+v.slice(3);if(v.length>7)v=v.slice(0,7)+'.'+v.slice(7);if(v.length>11)v=v.slice(0,11)+'-'+v.slice(11,13);el.value=v}
+function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${parseInt(d)}/${parseInt(m)}/${y}`}
+function setStatus(msg,type=''){const el=document.getElementById('status');el.textContent=msg;el.className='status '+type}
+
+function drawFront(canvas,data,logoImg){
+  const W=1190,H=840,gld='#c9a84c';
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#0d1b3e';
+  ctx.fillRect(W-220,0,220,100);
+  ctx.fillRect(0,H-100,200,100);
+  ctx.fillStyle=gld;
+  ctx.fillRect(W-148,88,10,110);ctx.fillRect(W-148,88,110,10);
+  ctx.fillRect(50,H-220,10,132);ctx.fillRect(50,H-90,110,10);
+  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=3;ctx.strokeRect(24,24,W-48,H-48);
+  if(logoImg)ctx.drawImage(logoImg,28,12,105,105);
+  ctx.fillStyle='#0d1b3e';ctx.textAlign='center';
+  ctx.font='bold 100px Cinzel,serif';ctx.fillText('CERTIFICADO',W/2,200);
+  ctx.font='bold 27px Lato,sans-serif';ctx.fillText('CENTRO EDUCACIONAL UNIVERSE',W/2,252);
+  ctx.fillStyle='#444';ctx.font='400 21px Lato,sans-serif';ctx.fillText('CERTIFICAMOS QUE',W/2,308);
+  ctx.fillStyle='#0d1b3e';
+  let fs=54;ctx.font=`bold italic ${fs}px Cinzel,serif`;
+  while(ctx.measureText(data.nome).width>W-120&&fs>28){fs-=2;ctx.font=`bold italic ${fs}px Cinzel,serif`}
+  ctx.fillText(data.nome,W/2,372);
+  const nW=Math.min(ctx.measureText(data.nome).width+60,W-80);
+  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(W/2-nW/2,384);ctx.lineTo(W/2+nW/2,384);ctx.stroke();
+  ctx.fillStyle='#222';ctx.textAlign='center';
+  let y=428;const lh=34;
+  ctx.font='400 22px Lato,sans-serif';ctx.fillText('CONCLUIU COM SUCESSO O CURSO DE',W/2,y);y+=lh;
+  ctx.font='bold 24px Lato,sans-serif';ctx.fillText(data.cursoNome,W/2,y);y+=lh;
+  ctx.font='400 22px Lato,sans-serif';
+  ctx.fillText(`INÍCIO: ${data.inicio}`,W/2,y);y+=lh;
+  ctx.fillText(`TÉRMINO: ${data.termino}`,W/2,y);y+=lh;
+  ctx.fillText(`CARGA HORÁRIA DE ${data.carga} HORAS`,W/2,y);y+=lh;
+  ctx.fillText(`CPF: ${data.cpf}`,W/2,y);
+  const sigY=H-122,lX=310,rX=W-240;
+  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(lX-150,sigY);ctx.lineTo(lX+150,sigY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(rX-180,sigY);ctx.lineTo(rX+180,sigY);ctx.stroke();
+  ctx.fillStyle='#0d1b3e';ctx.textAlign='center';
+  ctx.font='bold 13px Lato,sans-serif';ctx.fillText(data.nome,lX,sigY+16);
+  ctx.font='400 18px Cinzel,serif';ctx.fillText('ALUNO(A)',lX,sigY+38);
+  ctx.font='bold 13px Lato,sans-serif';ctx.fillText('CARLOS KLEBER BOTELHO CERQUEIRA',rX,sigY+16);
+  ctx.font='400 18px Cinzel,serif';ctx.fillText('DIRETOR',rX,sigY+38);
+  ctx.fillStyle=gld;ctx.fillRect(lX-80,sigY+46,160,4);
+}
+
+function drawBack(canvas,data){
+  const W=1190,H=840,gld='#c9a84c',navy='#0d1b3e';
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=navy;ctx.lineWidth=3;ctx.strokeRect(22,22,W-44,H-44);
+  ctx.strokeStyle=gld;ctx.lineWidth=2;ctx.strokeRect(30,30,W-60,H-60);
+  ctx.fillStyle=navy;ctx.textAlign='center';
+  ctx.font='bold 34px Lato,sans-serif';ctx.fillText('DISCIPLINAS CURSADAS',W/2,88);
+  ctx.strokeStyle=gld;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(W/2-240,100);ctx.lineTo(W/2+240,100);ctx.stroke();
+  const disc=data.disciplinas,cols=3,perCol=Math.ceil(disc.length/cols);
+  const colW=(W-160)/cols,startX=88,startY=148,rowH=42;
+  disc.forEach((d,i)=>{
+    const col=Math.floor(i/perCol),row=i%perCol;
+    const x=startX+col*colW,y=startY+row*rowH;
+    ctx.fillStyle=gld;ctx.beginPath();ctx.arc(x+6,y-7,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a1a1a';ctx.textAlign='left';
+    ctx.font='500 20px Lato,sans-serif';ctx.fillText(d[0],x+20,y);
+    ctx.fillStyle='#888';ctx.font='400 16px Lato,sans-serif';ctx.fillText(d[1],x+20,y+19);
+  });
+  ctx.fillStyle=navy;ctx.textAlign='center';
+  ctx.font='bold 15px Lato,sans-serif';ctx.fillText('CENTRO EDUCACIONAL UNIVERSE',W/2,H-44);
+  ctx.fillStyle=gld;ctx.fillRect(W/2-140,H-38,280,2);
+}
+
+async function gerar(){
+  const nome=document.getElementById('nome').value.trim();
+  const cpf=document.getElementById('cpf').value.trim();
+  const inicio=document.getElementById('inicio').value;
+  const termino=document.getElementById('termino').value;
+  const sel=document.getElementById('curso').value;
+  if(!nome||!cpf||!inicio||!termino||!sel){setStatus('Preencha todos os campos.','err');return}
+  const btn=document.getElementById('btnGerar');
+  btn.disabled=true;setStatus('Gerando certificado...');
+  const curso=CURSOS[sel];
+  const data={nome,cpf,cursoNome:curso.nome,carga:curso.carga,inicio:fmtDate(inicio),termino:fmtDate(termino),disciplinas:curso.disciplinas};
+  let logoImg=null;
+  try{logoImg=await new Promise((res)=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src='../assets/images/logo.png'})}catch(_){}
+  try{
+    await document.fonts.ready;
+    const cFront=document.getElementById('canvasFront');
+    const cBack=document.getElementById('canvasBack');
+    drawFront(cFront,data,logoImg);
+    drawBack(cBack,data);
+    document.getElementById('previewWrap').style.display='block';
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    pdf.addImage(cFront.toDataURL('image/jpeg',0.95),'JPEG',0,0,297,210);
+    pdf.addPage();
+    pdf.addImage(cBack.toDataURL('image/jpeg',0.95),'JPEG',0,0,297,210);
+    pdf.save(`certificado_${nome.replace(/\s+/g,'_').toLowerCase()}.pdf`);
+    setStatus('✓ PDF gerado com sucesso!','ok');
+  }catch(e){console.error(e);setStatus('Erro ao gerar o PDF.','err')}
+  btn.disabled=false;
+}
+</script>
+</body>
+</html>
