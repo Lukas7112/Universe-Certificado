@@ -54,23 +54,23 @@ canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);displa
 </head>
 <body>
 <div id="titlebar">
-  <span style="flex:1;padding-left:12px;font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;-webkit-app-region:drag;">UNIVERSE CERTIFICADOS &nbsp;·&nbsp; v0.0.8.7 β</span>
+  <span style="flex:1;padding-left:12px;font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;-webkit-app-region:drag;">UNIVERSE CERTIFICADOS &nbsp;·&nbsp; v0.8.7 β</span>
   <button class="tb-btn" onclick="window.electronAPI?.minimize()">─</button>
   <button class="tb-btn" onclick="window.electronAPI?.maximize()">□</button>
   <button class="tb-btn close" onclick="window.electronAPI?.close()">✕</button>
 </div>
 
 <div id="screen-intro" class="screen active">
-  <img id="intro-logo-img" class="intro-logo" src="../assets/images/logo.png" onerror="this.style.display='none'">
+  <img id="intro-logo-img" class="intro-logo" src="assets/images/logo.png" onerror="this.style.display='none'">
   <div class="intro-line" id="intro-line"></div>
   <div class="intro-made" id="intro-made">Feito por Lucks</div>
-  <div class="intro-sub"  id="intro-sub">Built with ❤ for Centro Educacional Universe</div>
+  <div class="intro-sub" id="intro-sub">Built with ❤ for Centro Educacional Universe</div>
 </div>
 
 <div id="screen-version" class="screen">
-  <div class="version-badge" id="ver-badge">0.0.8.7</div>
+  <div class="version-badge" id="ver-badge">0.8.7</div>
   <div class="version-label" id="ver-label">BETA &nbsp;·&nbsp; GERADOR DE CERTIFICADOS</div>
-  <div class="version-bar"   id="ver-bar"></div>
+  <div class="version-bar" id="ver-bar"></div>
 </div>
 
 <div id="screen-app" class="screen">
@@ -114,14 +114,13 @@ let introAudioBuffer=null;
 async function loadIntroSound(){
   try{
     const ac=new(window.AudioContext||window.webkitAudioContext)();
-    const res=await fetch('../assets/sounds/intro.wav');
+    const res=await fetch('assets/sounds/intro.wav');
     const buf=await res.arrayBuffer();
     introAudioBuffer={ctx:ac,buffer:await ac.decodeAudioData(buf)};
   }catch(e){introAudioBuffer=null}
 }
 function playIntroSound(){
-  try{if(introAudioBuffer){const s=introAudioBuffer.ctx.createBufferSource();s.buffer=introAudioBuffer.buffer;s.connect(introAudioBuffer.ctx.destination);s.start(0)}}
-  catch(e){}
+  try{if(introAudioBuffer){const s=introAudioBuffer.ctx.createBufferSource();s.buffer=introAudioBuffer.buffer;s.connect(introAudioBuffer.ctx.destination);s.start(0)}}catch(e){}
 }
 
 async function runIntro(){
@@ -255,7 +254,7 @@ async function gerar(){
   const curso=CURSOS[sel];
   const data={nome,cpf,cursoNome:curso.nome,carga:curso.carga,inicio:fmtDate(inicio),termino:fmtDate(termino),disciplinas:curso.disciplinas};
   let logoImg=null;
-  try{logoImg=await new Promise((res)=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src='../assets/images/logo.png'})}catch(_){}
+  try{logoImg=await new Promise((res)=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src='assets/images/logo.png'})}catch(_){}
   try{
     await document.fonts.ready;
     const cFront=document.getElementById('canvasFront');
