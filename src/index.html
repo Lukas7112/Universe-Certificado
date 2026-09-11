@@ -7,15 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0d1b3e;--gold:#c9a84c;--cream:#f5f0e8}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Lato',sans-serif}
-#titlebar{position:fixed;top:0;left:0;right:0;height:34px;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:flex-end;padding:0 10px;gap:8px;-webkit-app-region:drag;z-index:9999;border-bottom:1px solid rgba(201,168,76,0.15)}
+#titlebar{position:fixed;top:0;left:0;right:0;height:34px;background:rgba(0,0,0,0.85);display:flex;align-items:center;padding:0 10px;gap:8px;-webkit-app-region:drag;z-index:9999;border-bottom:1px solid rgba(201,168,76,0.15)}
 .tb-btn{-webkit-app-region:no-drag;width:26px;height:20px;border-radius:4px;border:none;background:rgba(255,255,255,0.08);color:#ccc;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .tb-btn:hover{background:rgba(255,255,255,0.18)}.tb-btn.close:hover{background:#c0392b;color:#fff}
 .screen{position:fixed;inset:0;top:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
 .screen.active{opacity:1;pointer-events:all}
-#screen-intro{background:#000}
-#screen-version{background:#000}
+#screen-intro,#screen-version{background:#000}
 #screen-app{background:#0a0f1e;overflow-y:auto;padding:32px 20px 60px}
 .intro-logo{width:180px;height:180px;object-fit:contain;margin-bottom:32px;filter:drop-shadow(0 0 40px rgba(201,168,76,0.5));opacity:0;transform:scale(0.85);transition:opacity 0.9s ease,transform 0.9s ease}
 .intro-logo.show{opacity:1;transform:scale(1)}
@@ -87,6 +85,8 @@ canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);displa
         <option value="">Selecione o curso...</option>
         <option value="profissionalizante">Informática Profissionalizante</option>
         <option value="basica">Informática Básica</option>
+        <option value="gestao">Gestão Empresarial</option>
+        <option value="atendimento">Atendimento ao Cliente</option>
       </select>
     </div>
     <div class="row">
@@ -112,45 +112,25 @@ function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
 let introAudioBuffer=null;
 async function loadIntroSound(){
-  try{
-    const ac=new(window.AudioContext||window.webkitAudioContext)();
-    const res=await fetch('assets/sounds/intro.wav');
-    const buf=await res.arrayBuffer();
-    introAudioBuffer={ctx:ac,buffer:await ac.decodeAudioData(buf)};
-  }catch(e){introAudioBuffer=null}
+  try{const ac=new(window.AudioContext||window.webkitAudioContext)();const res=await fetch('assets/sounds/intro.wav');const buf=await res.arrayBuffer();introAudioBuffer={ctx:ac,buffer:await ac.decodeAudioData(buf)};}catch(e){introAudioBuffer=null}
 }
-function playIntroSound(){
-  try{if(introAudioBuffer){const s=introAudioBuffer.ctx.createBufferSource();s.buffer=introAudioBuffer.buffer;s.connect(introAudioBuffer.ctx.destination);s.start(0)}}catch(e){}
-}
+function playIntroSound(){try{if(introAudioBuffer){const s=introAudioBuffer.ctx.createBufferSource();s.buffer=introAudioBuffer.buffer;s.connect(introAudioBuffer.ctx.destination);s.start(0)}}catch(e){}}
 
 async function runIntro(){
-  showScreen('intro');
-  await sleep(300);
+  showScreen('intro');await sleep(300);
   document.getElementById('intro-logo-img').classList.add('show');
-  playIntroSound();
-  await sleep(600);
-  document.getElementById('intro-line').classList.add('show');
-  await sleep(400);
-  document.getElementById('intro-made').classList.add('show');
-  await sleep(300);
-  document.getElementById('intro-sub').classList.add('show');
-  await sleep(2200);
-  screens.intro.style.transition='opacity 0.7s ease';
-  screens.intro.style.opacity='0';
-  await sleep(700);
-  showScreen('version');
-  await sleep(100);
+  playIntroSound();await sleep(600);
+  document.getElementById('intro-line').classList.add('show');await sleep(400);
+  document.getElementById('intro-made').classList.add('show');await sleep(300);
+  document.getElementById('intro-sub').classList.add('show');await sleep(2200);
+  screens.intro.style.transition='opacity 0.7s ease';screens.intro.style.opacity='0';await sleep(700);
+  showScreen('version');await sleep(100);
   document.getElementById('ver-badge').classList.add('show');
-  document.getElementById('ver-label').classList.add('show');
-  await sleep(200);
-  document.getElementById('ver-bar').classList.add('show');
-  await sleep(2800);
-  screens.version.style.transition='opacity 0.6s ease';
-  screens.version.style.opacity='0';
-  await sleep(600);
+  document.getElementById('ver-label').classList.add('show');await sleep(200);
+  document.getElementById('ver-bar').classList.add('show');await sleep(2800);
+  screens.version.style.transition='opacity 0.6s ease';screens.version.style.opacity='0';await sleep(600);
   showScreen('app');
 }
-
 window.addEventListener('load',async()=>{await loadIntroSound();runIntro()});
 
 const CURSOS={
@@ -164,7 +144,15 @@ const CURSOS={
     ["Word 2016 - Avançado - TCC","20h"],["Youtuber","20h"]]},
   basica:{nome:"INFORMÁTICA BÁSICA",carga:"90",disciplinas:[
     ["Digitação","10h"],["Excel 2016","20h"],["Internet V5","10h"],
-    ["PowerPoint 2016","20h"],["Windows 10 - V1809","10h"],["Word 2016","20h"]]}
+    ["PowerPoint 2016","20h"],["Windows 10 - V1809","10h"],["Word 2016","20h"]]},
+  gestao:{nome:"GESTÃO EMPRESARIAL",carga:"98",disciplinas:[
+    ["Administração","24h"],["Contabilidade","12h"],["Departamento Pessoal","12h"],
+    ["Empreendedorismo","8h"],["Liderança e Gestão de Pessoas na Prática","12h"],
+    ["Matemática Financeira","30h"]]},
+  atendimento:{nome:"ATENDIMENTO AO CLIENTE",carga:"64",disciplinas:[
+    ["Balconista de Farmácia","14h"],["Excelência no Atendimento","8h"],
+    ["Operador de Caixa","6h"],["Secretário(a)","12h"],
+    ["Telemarketing","12h"],["Vendas","12h"]]}
 };
 
 function maskCPF(el){let v=el.value.replace(/\D/g,'');if(v.length>3)v=v.slice(0,3)+'.'+v.slice(3);if(v.length>7)v=v.slice(0,7)+'.'+v.slice(7);if(v.length>11)v=v.slice(0,11)+'-'+v.slice(11,13);el.value=v}
@@ -173,12 +161,9 @@ function setStatus(msg,type=''){const el=document.getElementById('status');el.te
 
 function drawFront(canvas,data,logoImg){
   const W=1190,H=840,gld='#c9a84c';
-  canvas.width=W;canvas.height=H;
-  const ctx=canvas.getContext('2d');
+  canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
   ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#0d1b3e';
-  ctx.fillRect(W-220,0,220,100);
-  ctx.fillRect(0,H-100,200,100);
+  ctx.fillStyle='#0d1b3e';ctx.fillRect(W-220,0,220,100);ctx.fillRect(0,H-100,200,100);
   ctx.fillStyle=gld;
   ctx.fillRect(W-148,88,10,110);ctx.fillRect(W-148,88,110,10);
   ctx.fillRect(50,H-220,10,132);ctx.fillRect(50,H-90,110,10);
@@ -218,8 +203,7 @@ function drawFront(canvas,data,logoImg){
 
 function drawBack(canvas,data){
   const W=1190,H=840,gld='#c9a84c',navy='#0d1b3e';
-  canvas.width=W;canvas.height=H;
-  const ctx=canvas.getContext('2d');
+  canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
   ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
   ctx.strokeStyle=navy;ctx.lineWidth=3;ctx.strokeRect(22,22,W-44,H-44);
   ctx.strokeStyle=gld;ctx.lineWidth=2;ctx.strokeRect(30,30,W-60,H-60);
@@ -254,13 +238,12 @@ async function gerar(){
   const curso=CURSOS[sel];
   const data={nome,cpf,cursoNome:curso.nome,carga:curso.carga,inicio:fmtDate(inicio),termino:fmtDate(termino),disciplinas:curso.disciplinas};
   let logoImg=null;
-  try{logoImg=await new Promise((res)=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src='assets/images/logo.png'})}catch(_){}
+  try{logoImg=await new Promise(res=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src='assets/images/logo.png'})}catch(_){}
   try{
     await document.fonts.ready;
     const cFront=document.getElementById('canvasFront');
     const cBack=document.getElementById('canvasBack');
-    drawFront(cFront,data,logoImg);
-    drawBack(cBack,data);
+    drawFront(cFront,data,logoImg);drawBack(cBack,data);
     document.getElementById('previewWrap').style.display='block';
     const{jsPDF}=window.jspdf;
     const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
