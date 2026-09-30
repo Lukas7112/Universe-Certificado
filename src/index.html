@@ -3,56 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de Certificados — Universe</title>
+<title>Gerador de Certificados — Universe Cursos</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Lato',sans-serif}
-#titlebar{position:fixed;top:0;left:0;right:0;height:34px;background:rgba(0,0,0,0.85);display:flex;align-items:center;padding:0 10px;gap:8px;-webkit-app-region:drag;z-index:9999;border-bottom:1px solid rgba(201,168,76,0.15)}
+#titlebar{position:fixed;top:0;left:0;right:0;height:34px;background:rgba(0,0,0,0.85);display:flex;align-items:center;padding:0 10px;gap:8px;-webkit-app-region:drag;z-index:9999;border-bottom:1px solid rgba(245,166,35,0.2)}
 .tb-btn{-webkit-app-region:no-drag;width:26px;height:20px;border-radius:4px;border:none;background:rgba(255,255,255,0.08);color:#ccc;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .tb-btn:hover{background:rgba(255,255,255,0.18)}.tb-btn.close:hover{background:#c0392b;color:#fff}
 .screen{position:fixed;inset:0;top:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
 .screen.active{opacity:1;pointer-events:all}
-#screen-intro,#screen-version{background:#000}
-#screen-app{background:#0a0f1e;overflow-y:auto;padding:32px 20px 60px}
-.intro-logo{width:180px;height:180px;object-fit:contain;margin-bottom:32px;filter:drop-shadow(0 0 40px rgba(201,168,76,0.5));opacity:0;transform:scale(0.85);transition:opacity 0.9s ease,transform 0.9s ease}
+#screen-intro,#screen-version{background:#0a1933}
+#screen-app{background:#071020;overflow-y:auto;padding:32px 20px 60px}
+.intro-logo{width:200px;height:200px;object-fit:contain;margin-bottom:28px;filter:drop-shadow(0 0 50px rgba(245,166,35,0.6));opacity:0;transform:scale(0.85);transition:opacity 0.9s ease,transform 0.9s ease}
 .intro-logo.show{opacity:1;transform:scale(1)}
-.intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:20px 0;transition:width 1s ease 0.2s}
-.intro-line.show{width:260px}
+.intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,#f5a623,transparent);margin:18px 0;transition:width 1s ease 0.2s}
+.intro-line.show{width:280px}
 .intro-made{font-family:'Cinzel',serif;font-size:clamp(1.1rem,3vw,1.6rem);letter-spacing:0.22em;color:#fff;text-transform:uppercase;opacity:0;transform:translateY(12px);transition:opacity 0.7s ease 0.3s,transform 0.7s ease 0.3s}
 .intro-made.show{opacity:1;transform:translateY(0)}
-.intro-sub{margin-top:10px;font-size:0.78rem;letter-spacing:0.18em;color:rgba(201,168,76,0.75);text-transform:uppercase;opacity:0;transition:opacity 0.7s ease 0.55s}
+.intro-sub{margin-top:10px;font-size:0.78rem;letter-spacing:0.18em;color:rgba(245,166,35,0.75);text-transform:uppercase;opacity:0;transition:opacity 0.7s ease 0.55s}
 .intro-sub.show{opacity:1}
-.version-badge{font-family:'Cinzel',serif;font-size:clamp(2rem,8vw,5rem);font-weight:900;color:#c9a84c;letter-spacing:0.08em;opacity:0;transform:scale(1.15);transition:opacity 0.6s ease,transform 0.8s ease}
+.version-badge{font-family:'Cinzel',serif;font-size:clamp(2rem,8vw,5rem);font-weight:900;color:#f5a623;letter-spacing:0.08em;opacity:0;transform:scale(1.15);transition:opacity 0.6s ease,transform 0.8s ease}
 .version-badge.show{opacity:1;transform:scale(1)}
 .version-label{margin-top:12px;font-size:0.75rem;letter-spacing:0.3em;color:rgba(255,255,255,0.35);text-transform:uppercase;opacity:0;transition:opacity 0.6s ease 0.3s}
 .version-label.show{opacity:1}
-.version-bar{margin-top:32px;width:0;height:2px;background:#c9a84c;border-radius:2px;transition:width 2.2s cubic-bezier(0.4,0,0.2,1) 0.2s}
+.version-bar{margin-top:32px;width:0;height:2px;background:#f5a623;border-radius:2px;transition:width 2.2s cubic-bezier(0.4,0,0.2,1) 0.2s}
 .version-bar.show{width:320px}
 .app-header{text-align:center;margin-bottom:40px}
-.app-header h1{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:900;letter-spacing:0.12em;color:#c9a84c;text-transform:uppercase}
+.app-header h1{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.5vw,2rem);font-weight:900;letter-spacing:0.12em;color:#f5a623;text-transform:uppercase}
 .app-header p{margin-top:6px;font-size:0.82rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase}
-.gold-line{width:70px;height:2px;background:#c9a84c;margin:14px auto 0}
-.card{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.22);border-radius:16px;padding:36px 40px;width:100%;max-width:560px;backdrop-filter:blur(8px)}
+.gold-line{width:70px;height:2px;background:#f5a623;margin:14px auto 0}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(245,166,35,0.22);border-radius:16px;padding:36px 40px;width:100%;max-width:560px;backdrop-filter:blur(8px)}
 .field{margin-bottom:22px}
-.field label{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#c9a84c;margin-bottom:7px}
+.field label{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#f5a623;margin-bottom:7px}
 .field input,.field select{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:8px;padding:12px 15px;color:#fff;font-family:'Lato',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s;appearance:none}
-.field select option{background:#1a2040;color:#fff}
-.field input:focus,.field select:focus{border-color:#c9a84c;background:rgba(201,168,76,0.06)}
+.field select option{background:#0a1933;color:#fff}
+.field input:focus,.field select:focus{border-color:#f5a623;background:rgba(245,166,35,0.06)}
 .field input::placeholder{color:rgba(255,255,255,0.22)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.btn{width:100%;margin-top:6px;padding:15px;background:linear-gradient(135deg,#c9a84c,#e8c96a,#b8922a);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0d1b3e;cursor:pointer;transition:opacity 0.2s,transform 0.15s}
+.btn{width:100%;margin-top:6px;padding:15px;background:linear-gradient(135deg,#f5a623,#f7b733,#d4880e);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0a1933;cursor:pointer;transition:opacity 0.2s,transform 0.15s}
 .btn:hover{opacity:0.9;transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
 .status{margin-top:18px;text-align:center;font-size:0.83rem;color:rgba(255,255,255,0.45);min-height:20px;letter-spacing:0.05em}
 .status.ok{color:#7ecba1}.status.err{color:#f08080}
 .preview-wrap{margin-top:44px;width:100%;max-width:860px}
-.preview-label{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,168,76,0.55);margin-bottom:14px;text-align:center}
+.preview-label{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.55);margin-bottom:14px;text-align:center}
 canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);display:block;margin-bottom:22px}
 </style>
 </head>
 <body>
 <div id="titlebar">
-  <span style="flex:1;padding-left:12px;font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;-webkit-app-region:drag;">UNIVERSE CERTIFICADOS &nbsp;·&nbsp; v0.8.7 β</span>
+  <span style="flex:1;padding-left:12px;font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;-webkit-app-region:drag;">UNIVERSE CURSOS &nbsp;·&nbsp; v0.8.7 β</span>
   <button class="tb-btn" onclick="window.electronAPI?.minimize()">─</button>
   <button class="tb-btn" onclick="window.electronAPI?.maximize()">□</button>
   <button class="tb-btn close" onclick="window.electronAPI?.close()">✕</button>
@@ -62,7 +62,7 @@ canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);displa
   <img id="intro-logo-img" class="intro-logo" src="assets/images/logo.png" onerror="this.style.display='none'">
   <div class="intro-line" id="intro-line"></div>
   <div class="intro-made" id="intro-made">Feito por Lucks</div>
-  <div class="intro-sub" id="intro-sub">Built with ❤ for Centro Educacional Universe</div>
+  <div class="intro-sub" id="intro-sub">Built with ❤ for Universe Cursos</div>
 </div>
 
 <div id="screen-version" class="screen">
@@ -74,7 +74,7 @@ canvas{width:100%;border-radius:8px;box-shadow:0 8px 48px rgba(0,0,0,0.6);displa
 <div id="screen-app" class="screen">
   <div class="app-header">
     <h1>Gerador de Certificados</h1>
-    <p>Centro Educacional Universe</p>
+    <p>Universe Cursos</p>
     <div class="gold-line"></div>
   </div>
   <div class="card">
@@ -160,28 +160,65 @@ function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${parseInt(d
 function setStatus(msg,type=''){const el=document.getElementById('status');el.textContent=msg;el.className='status '+type}
 
 function drawFront(canvas,data,logoImg){
-  const W=1190,H=840,gld='#c9a84c';
+  const W=1190,H=840;
+  const NAVY='#0a1933', GOLD='#f5a623', CREAM='#f5f0e8';
   canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
-  ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#0d1b3e';ctx.fillRect(W-220,0,220,100);ctx.fillRect(0,H-100,200,100);
-  ctx.fillStyle=gld;
+
+  // Fundo creme
+  ctx.fillStyle=CREAM;ctx.fillRect(0,0,W,H);
+
+  // Blocos navy
+  ctx.fillStyle=NAVY;
+  ctx.fillRect(W-220,0,220,100);
+  ctx.fillRect(0,H-100,200,100);
+
+  // L dourado top-right
+  ctx.fillStyle=GOLD;
   ctx.fillRect(W-148,88,10,110);ctx.fillRect(W-148,88,110,10);
+  // L dourado bottom-left
   ctx.fillRect(50,H-220,10,132);ctx.fillRect(50,H-90,110,10);
-  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=3;ctx.strokeRect(24,24,W-48,H-48);
-  if(logoImg)ctx.drawImage(logoImg,28,12,105,105);
-  ctx.fillStyle='#0d1b3e';ctx.textAlign='center';
-  ctx.font='bold 100px Cinzel,serif';ctx.fillText('CERTIFICADO',W/2,200);
-  ctx.font='bold 27px Lato,sans-serif';ctx.fillText('CENTRO EDUCACIONAL UNIVERSE',W/2,252);
-  ctx.fillStyle='#444';ctx.font='400 21px Lato,sans-serif';ctx.fillText('CERTIFICAMOS QUE',W/2,308);
-  ctx.fillStyle='#0d1b3e';
+
+  // Borda
+  ctx.strokeStyle=NAVY;ctx.lineWidth=3;ctx.strokeRect(24,24,W-48,H-48);
+
+  // Logo + nome no canto top-left
+  if(logoImg){
+    ctx.drawImage(logoImg,28,10,110,110);
+  }
+  // Nome "UNIVERSE CURSOS" ao lado da logo
+  ctx.fillStyle=NAVY;
+  ctx.textAlign='left';
+  ctx.font='bold 18px Lato,sans-serif';
+  ctx.fillText('UNIVERSE',148,50);
+  ctx.font='bold 14px Lato,sans-serif';
+  ctx.fillStyle=GOLD;
+  ctx.fillText('CURSOS',148,72);
+
+  // CERTIFICADO
+  ctx.fillStyle=NAVY;ctx.textAlign='center';
+  ctx.font='bold 100px Cinzel,serif';ctx.fillText('CERTIFICADO',W/2,205);
+
+  // Subtítulo
+  ctx.font='bold 27px Lato,sans-serif';ctx.fillText('UNIVERSE CURSOS',W/2,252);
+
+  // Linha dourada sob subtítulo
+  ctx.strokeStyle=GOLD;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(W/2-160,262);ctx.lineTo(W/2+160,262);ctx.stroke();
+
+  ctx.fillStyle='#444';ctx.font='400 21px Lato,sans-serif';ctx.fillText('CERTIFICAMOS QUE',W/2,300);
+
+  // Nome do aluno
+  ctx.fillStyle=NAVY;
   let fs=54;ctx.font=`bold italic ${fs}px Cinzel,serif`;
   while(ctx.measureText(data.nome).width>W-120&&fs>28){fs-=2;ctx.font=`bold italic ${fs}px Cinzel,serif`}
-  ctx.fillText(data.nome,W/2,372);
+  ctx.fillText(data.nome,W/2,365);
   const nW=Math.min(ctx.measureText(data.nome).width+60,W-80);
-  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(W/2-nW/2,384);ctx.lineTo(W/2+nW/2,384);ctx.stroke();
+  ctx.strokeStyle=NAVY;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(W/2-nW/2,377);ctx.lineTo(W/2+nW/2,377);ctx.stroke();
+
+  // Corpo
   ctx.fillStyle='#222';ctx.textAlign='center';
-  let y=428;const lh=34;
+  let y=420;const lh=34;
   ctx.font='400 22px Lato,sans-serif';ctx.fillText('CONCLUIU COM SUCESSO O CURSO DE',W/2,y);y+=lh;
   ctx.font='bold 24px Lato,sans-serif';ctx.fillText(data.cursoNome,W/2,y);y+=lh;
   ctx.font='400 22px Lato,sans-serif';
@@ -189,41 +226,44 @@ function drawFront(canvas,data,logoImg){
   ctx.fillText(`TÉRMINO: ${data.termino}`,W/2,y);y+=lh;
   ctx.fillText(`CARGA HORÁRIA DE ${data.carga} HORAS`,W/2,y);y+=lh;
   ctx.fillText(`CPF: ${data.cpf}`,W/2,y);
+
+  // Assinaturas
   const sigY=H-122,lX=310,rX=W-240;
-  ctx.strokeStyle='#0d1b3e';ctx.lineWidth=1.2;
+  ctx.strokeStyle=NAVY;ctx.lineWidth=1.2;
   ctx.beginPath();ctx.moveTo(lX-150,sigY);ctx.lineTo(lX+150,sigY);ctx.stroke();
   ctx.beginPath();ctx.moveTo(rX-180,sigY);ctx.lineTo(rX+180,sigY);ctx.stroke();
-  ctx.fillStyle='#0d1b3e';ctx.textAlign='center';
+  ctx.fillStyle=NAVY;ctx.textAlign='center';
   ctx.font='bold 13px Lato,sans-serif';ctx.fillText(data.nome,lX,sigY+16);
   ctx.font='400 18px Cinzel,serif';ctx.fillText('ALUNO(A)',lX,sigY+38);
   ctx.font='bold 13px Lato,sans-serif';ctx.fillText('CARLOS KLEBER BOTELHO CERQUEIRA',rX,sigY+16);
   ctx.font='400 18px Cinzel,serif';ctx.fillText('DIRETOR',rX,sigY+38);
-  ctx.fillStyle=gld;ctx.fillRect(lX-80,sigY+46,160,4);
+  ctx.fillStyle=GOLD;ctx.fillRect(lX-80,sigY+46,160,4);
 }
 
 function drawBack(canvas,data){
-  const W=1190,H=840,gld='#c9a84c',navy='#0d1b3e';
+  const W=1190,H=840;
+  const NAVY='#0a1933', GOLD='#f5a623';
   canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
   ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle=navy;ctx.lineWidth=3;ctx.strokeRect(22,22,W-44,H-44);
-  ctx.strokeStyle=gld;ctx.lineWidth=2;ctx.strokeRect(30,30,W-60,H-60);
-  ctx.fillStyle=navy;ctx.textAlign='center';
+  ctx.strokeStyle=NAVY;ctx.lineWidth=3;ctx.strokeRect(22,22,W-44,H-44);
+  ctx.strokeStyle=GOLD;ctx.lineWidth=2;ctx.strokeRect(30,30,W-60,H-60);
+  ctx.fillStyle=NAVY;ctx.textAlign='center';
   ctx.font='bold 34px Lato,sans-serif';ctx.fillText('DISCIPLINAS CURSADAS',W/2,88);
-  ctx.strokeStyle=gld;ctx.lineWidth=2;
+  ctx.strokeStyle=GOLD;ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(W/2-240,100);ctx.lineTo(W/2+240,100);ctx.stroke();
   const disc=data.disciplinas,cols=3,perCol=Math.ceil(disc.length/cols);
   const colW=(W-160)/cols,startX=88,startY=148,rowH=42;
   disc.forEach((d,i)=>{
     const col=Math.floor(i/perCol),row=i%perCol;
     const x=startX+col*colW,y=startY+row*rowH;
-    ctx.fillStyle=gld;ctx.beginPath();ctx.arc(x+6,y-7,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=GOLD;ctx.beginPath();ctx.arc(x+6,y-7,5,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#1a1a1a';ctx.textAlign='left';
     ctx.font='500 20px Lato,sans-serif';ctx.fillText(d[0],x+20,y);
     ctx.fillStyle='#888';ctx.font='400 16px Lato,sans-serif';ctx.fillText(d[1],x+20,y+19);
   });
-  ctx.fillStyle=navy;ctx.textAlign='center';
-  ctx.font='bold 15px Lato,sans-serif';ctx.fillText('CENTRO EDUCACIONAL UNIVERSE',W/2,H-44);
-  ctx.fillStyle=gld;ctx.fillRect(W/2-140,H-38,280,2);
+  ctx.fillStyle=NAVY;ctx.textAlign='center';
+  ctx.font='bold 15px Lato,sans-serif';ctx.fillText('UNIVERSE CURSOS',W/2,H-44);
+  ctx.fillStyle=GOLD;ctx.fillRect(W/2-120,H-38,240,2);
 }
 
 async function gerar(){
