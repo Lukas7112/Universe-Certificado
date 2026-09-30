@@ -18,22 +18,20 @@ jobs:
         with:
           node-version: 24
 
-      - name: Instalar Java 17
+      - name: Instalar Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Instalar dependências Node
         run: npm install
 
       - name: Instalar Capacitor
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Inicializar Capacitor
-        run: |
-          npx cap init "Universe Certificados" "br.com.universe.certificados" --web-dir src
+        run: npx cap init "Universe Certificados" "br.com.universe.certificados" --web-dir src
 
       - name: Adicionar plataforma Android
         run: npx cap add android
